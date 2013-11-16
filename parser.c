@@ -8,6 +8,7 @@
 
 struct statementNode* parse_program_and_generate_intermediate_representation(){
 	struct statementNode* program;
+	init_flag = TRUE;
 	// program = make_statementNode();
 	// program->stmt_type = NOOPSTMT;
 	program = parse_program();
@@ -29,7 +30,7 @@ struct statementNode* parse_program(){
 		ttype = getToken();
 		if (ttype == LBRACE)
 		{
-			program->next = parse_body();
+			prog->next = parse_body();
 		}
 	} else
 	if (ttype == LBRACE)
@@ -53,39 +54,120 @@ struct assignmentStatement* parse_assign_stmt(){
 		assign_stmt = make_assignmentStatement();
 		assign_stmt->op1 = parse_var();
 		ttype = getToken();
-		if (ttype == SEMICOLON)
+		if ( ttype == SEMICOLON || ttype == EQUAL)
 		{
+			ungetToken();
 			assign_stmt->op = 0;
 			return assign_stmt;
 		}
 
 
+	} else
+	if (ttype == NUM)
+	{
+		assign_stmt = make_assignmentStatement();
+		assign_stmt->op1 = parse_var(ttype);
 	}
 	
 	return assign_stmt;
 }
 
-struct varNode* parse_var(){
+struct varNode* parse_var(int ttype){
 	struct varNode* var;
 	
 	var = make_VarNode();
-	var->name = token;
-	var->value = 0; // all variables are initialized to 0.
 	
+	
+	if(init_flag == TRUE){
+		var->name = token;
+		var->value = 0; // all variables are initialized to 0.
+	} else {
+		
+		if (ttype == NUM)
+		{
+			var->name = token;
+			var->value = atoi(token); //For literals (NUM), the value is the value of the number.
+		}
+	}
+
 	return var;
 }
 
-struct statementNode* parse_id_list(){
-	struct statementNode* id_list;
+// struct statementNode* parse_id_list(){
+// 	struct statementNode* id_list;
 
-	return id_list;
-}
+// 	return id_list;
+// }
 
 struct statementNode* parse_body(){
 	struct statementNode* body;
+	// make sure that we have a body open brace
+	if (ttype == LBRACE)
+	{
+		init_flag = FALSE;
+		body = parse_stmt_list(); 
+		ttype = getToken();
+        if (ttype == RBRACE)
+                return bodt;
+        else{        
+            syntax_error("body. RBRACE expected", line_no);
+            exit(0); 
+        }
+	}
 
 	return body;
 
+}
+
+struct statementNode* parse_stmt_list(){
+	struct statementNode* stmt_list;
+	ttype = getToken();
+	if (ttype == ID || ttype == NUM)
+	{
+		stmt_list = parse_stmt();
+
+	} else if 
+	return stmt_list;
+}
+
+struct statementNode* parse_stmt(){
+	struct statementNode* stmt;
+		 if (ttype == ID)
+		 {
+		 	stmt->stmt_type = ASSIGNSTMT;
+		 	stmt->assign_stmt = parse_assign_stmt();
+		 	if (ttype == EQUAL)
+		 	{	
+		 		stmt->next = parse_stmt();
+		 		// now assign the rhs value to lhs
+		 		stmt->assign_stmt->op1->value = stmt->next->assign_stmt->op1->value;
+		 		if (ttype == SEMICOLON)
+					return stmt;
+
+		 	} else
+		 	if (ttype == SEMICOLON)
+		 	{
+		 		stmt->next = parse_stmt();
+		 	}
+
+		 } else
+		 if (ttype == NUM)
+		 {
+		 	ungetToken();
+		 	stmt->stmt_type = ASSIGNSTMT;
+		 	stmt->assign_stmt = parse_assign_stmt();
+		 	if (ttype == SEMICOLON)
+		 	{
+		 		return stmt;
+		 	}
+
+		 } else
+		 if (ttype == RBRACE)
+		 {
+		 	return stmt;
+		 }
+
+	return stmt;
 }
 
 //-----------------------------------------------------------------------------
