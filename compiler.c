@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include <string.h>
 #include "compiler.h"
+#include "parser.h"
 
 #define DEBUG 1	 // 1 => Turn ON debugging, 0 => Turn OFF debugging
 
