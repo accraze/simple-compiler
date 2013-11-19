@@ -83,6 +83,7 @@ struct assignmentStatement* parse_assign_stmt(){
 	} else
 	if (ttype == NUM)
 	{
+		ungetToken();
 		assign_stmt = make_assignmentStatement();
 		assign_stmt->op1 = parse_var(ttype);
 	}
@@ -150,41 +151,32 @@ struct statementNode* parse_stmt(){
 	struct statementNode* stmt;
 		 if (ttype == ID)
 		 {
+		 	ungetToken();
 		 	stmt = make_statementNode();
 		 	stmt->stmt_type = ASSIGNSTMT;
 		 	stmt->assign_stmt = parse_assign_stmt();
-		 	if (ttype == EQUAL)
+		 	ttype = getToken();
+		 	if (ttype == SEMICOLON)
 		 	{	
-		 		stmt->next = parse_stmt();
+		 		ttype = getToken();
+		 		if (ttype == ID || ttype == PRINT)
+		 		{
+		 			ungetToken();
+		 			stmt->next = parse_stmt();
+		 		} else
+		 		if (ttype == RBRACE)
+		 		{
+		 			ungetToken();
+		 			stmt->next = NULL;
+		 		}
+		 		
 		 		// now assign the rhs value to lhs
 		 		stmt->assign_stmt->op1->value = stmt->next->assign_stmt->op1->value;
-		 		if (ttype == SEMICOLON)
-					return stmt;
+				return stmt;
 
-		 	} else
-		 	if (ttype == SEMICOLON)
-		 	{
-		 		stmt->next = parse_stmt();
-		 	}
-
-		 } else
-		 if (ttype == NUM)
-		 {
-		 	ungetToken();
-		 	stmt->stmt_type = ASSIGNSTMT;
-		 	stmt->assign_stmt = parse_assign_stmt();
-		 	if (ttype == SEMICOLON)
-		 	{
-		 		return stmt;
-		 	}
-
-		 } else
-		 if (ttype == RBRACE)
-		 {
-		 	return stmt;
-		 }
-
+		 	} 
 	return stmt;
+	}
 }
 
 
