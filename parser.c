@@ -5,6 +5,27 @@
 #include <string.h>
 #include "compiler.h"
 #include "parser.h"
+
+
+
+
+
+//-----------------------------------------------------------------------------
+//
+//-----------------------------------------------------------------------------
+struct statementNode* make_statementNode(){        
+        return (struct statementNode*) malloc(sizeof(struct statementNode));
+}
+
+struct assignmentStatement* make_assignmentStatement(){        
+        return (struct assignmentStatement*) malloc(sizeof(struct assignmentStatement));
+}
+
+struct varNode* make_varNode(){        
+        return (struct varNode*) malloc(sizeof(struct varNode));
+}
+
+
 // entrance point from sample code:
 struct statementNode* parse_program_and_generate_intermediate_representation(){
 	struct statementNode* program;
@@ -33,7 +54,7 @@ struct statementNode* parse_program(){
 	if (ttype == LBRACE)
 	{
 		//body section
-		program->next = parse_body();
+		prog->next = parse_body();
 	}else{
 		//error?
 	}
@@ -43,7 +64,7 @@ struct statementNode* parse_program(){
 
 
 struct assignmentStatement* parse_assign_stmt(){
-	struct statementNode* assign_stmt;
+	struct assignmentStatement* assign_stmt;
 	ttype = getToken();
 	
 	if (ttype == ID)
@@ -69,10 +90,10 @@ struct assignmentStatement* parse_assign_stmt(){
 	return assign_stmt;
 }
 
-struct varNode* parse_var(int ttype){
+struct varNode* parse_var(){
 	struct varNode* var;
 	
-	var = make_VarNode();
+	var = make_varNode();
 	
 	
 	if(init_flag == TRUE){
@@ -105,11 +126,7 @@ struct statementNode* parse_body(){
 		body = parse_stmt_list(); 
 		ttype = getToken();
         if (ttype == RBRACE)
-                return bodt;
-        else{        
-            syntax_error("body. RBRACE expected", line_no);
-            exit(0); 
-        }
+                return body;
 	}
 
 	return body;
@@ -128,10 +145,12 @@ struct statementNode* parse_stmt_list(){
 	return stmt_list;
 }
 
+
 struct statementNode* parse_stmt(){
 	struct statementNode* stmt;
 		 if (ttype == ID)
 		 {
+		 	stmt = make_statementNode();
 		 	stmt->stmt_type = ASSIGNSTMT;
 		 	stmt->assign_stmt = parse_assign_stmt();
 		 	if (ttype == EQUAL)
@@ -168,20 +187,7 @@ struct statementNode* parse_stmt(){
 	return stmt;
 }
 
-//-----------------------------------------------------------------------------
-//
-//-----------------------------------------------------------------------------
-struct statementNode* make_statementNode(){        
-        return (struct statementNode*) malloc(sizeof(struct statementNode));
-}
 
-struct assignmentStatement* make_assignmentStatement(){        
-        return (struct assignmentStatement*) malloc(sizeof(struct assignmentStatement));
-}
-
-struct varNode* make_varNode(){        
-        return (struct varNode*) malloc(sizeof(struct varNode));
-}
 
 
 
