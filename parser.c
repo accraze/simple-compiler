@@ -5,14 +5,11 @@
 #include <string.h>
 #include "compiler.h"
 #include "parser.h"
-
+// entrance point from sample code:
 struct statementNode* parse_program_and_generate_intermediate_representation(){
 	struct statementNode* program;
-	init_flag = TRUE;
-	// program = make_statementNode();
-	// program->stmt_type = NOOPSTMT;
+	init_flag = TRUE; // variables can initialized!!
 	program = parse_program();
-	
 	return program;
 }
 
@@ -126,7 +123,8 @@ struct statementNode* parse_stmt_list(){
 	{
 		stmt_list = parse_stmt();
 
-	} else if 
+	}
+
 	return stmt_list;
 }
 

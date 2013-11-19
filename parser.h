@@ -2,7 +2,7 @@
 #define _PARSER_H_
 
 
-var init_flag;
+int init_flag;
 
 // Parsing Functions
 struct statementNode* parse_program();
