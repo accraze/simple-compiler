@@ -18,7 +18,9 @@ struct varNode* parse_var();
 // Memory Management Functions
 struct varNode* make_varNode();
 struct statementNode* make_statementNode();
+struct printStatement* make_printStatement();
 struct assignmentStatement* make_assignmentStatement();
+
 
 
 
