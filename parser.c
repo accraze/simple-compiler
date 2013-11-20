@@ -76,6 +76,7 @@ struct assignmentStatement* parse_assign_stmt(){
 		{
 			ungetToken();
 			assign_stmt->op = 0;
+			assign_stmt->lhs = assign_stmt->op1;
 			return assign_stmt;
 		}
 
