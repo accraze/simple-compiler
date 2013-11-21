@@ -78,12 +78,29 @@ struct assignmentStatement* parse_assign_stmt(){
 		assign_stmt = make_assignmentStatement();
 		assign_stmt->op1 = parse_var();
 		ttype = getToken();
-		if ( ttype == SEMICOLON || ttype == EQUAL)
+		if (ttype == EQUAL)
 		{
-			ungetToken();
+			// parse expr 
+			// op1 op op2
+			ttype = getToken();
+			if (ttype == SEMICOLON)
+			{
+				ungetToken();
+				return assign_stmt;
+			} else
+			if (ttype == ID || ttype == NUM)
+			 {
+			 	// expr
+			 	struct assignmentStatement* expr;
+
+			 } 
+			
+		} else
+		if (ttype == SEMICOLON)
+		{
+			// declaration case
 			assign_stmt->op = 0;
 			assign_stmt->lhs = assign_stmt->op1;
-			return assign_stmt;
 		}
 
 
