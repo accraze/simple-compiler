@@ -16,18 +16,21 @@ int var_total = 0;
 
 // looks up previously declared variables
 // and returns varNode that matches the token
-struct statementNode* var_lookup(char* token){
+struct varNode* var_lookup(char* token){
 	int i;
 	struct varNode* var;
 	for (i = 0; i < var_total; ++i)
 	{
-		if (strcmp(var_store[i]->name, token))
+		// printf("iter# %d = %s\n", i, var_store[i]->name);
+		// printf("token = %s\n", token );
+		if (strcmp(var_store[i]->name, token)==0)
 		{
+			//printf("WASSUP!!\n");
 			var = var_store[i];
 			return var;
 		}
 	}
-
+	printf("WE CANT FIND SHIT!!\n" );
 }
 
 void debug_print_var_store(){
@@ -79,36 +82,58 @@ void init_var_store(){
 struct statementNode* parse_program_and_generate_intermediate_representation(){
 	struct statementNode* program;
 	init_flag = TRUE; // variables can initialized!!
-	program = parse_program();
-	return program;
-}
+	//printf("HELLO!!!!!!\n");
 
-struct statementNode* parse_program(){
-	struct statementNode* prog;
-	prog = make_statementNode();
-	ttype = getToken();
-	
+	ttype=getToken();
+	printf("%s\n", token);
 	if (ttype == ID)
 	{
-		//var section
 		ungetToken();
 		parse_var_section();
 		ttype = getToken();
 		if (ttype == LBRACE)
 		{
-			prog->next = parse_body();
+			ungetToken();
+			program = parse_body();
+
 		}
 	} else
 	if (ttype == LBRACE)
 	{
-		//body section
-		prog->next = parse_body();
-	}else{
-		//error?
+		ungetToken();
+		program = parse_body();
 	}
-
-	return prog;
+	else{
+		// error?
+	}
+	return program;
 }
+
+// struct statementNode* parse_program(){
+// 	struct statementNode* prog;
+// 	prog = make_statementNode();
+// 	ttype = getToken();
+// 	if (ttype == ID)
+// 	{
+// 		//var section
+// 		ungetToken();
+// 		parse_var_section();
+// 		ttype = getToken();
+// 		if (ttype == LBRACE)
+// 		{
+// 			prog->next = parse_body();
+// 		}
+// 	} else
+// 	if (ttype == LBRACE)
+// 	{
+// 		//body section
+// 		prog->next = parse_body();
+// 	}else{
+// 		//error?
+// 	}
+
+// 	return prog;
+// }
 
 void parse_var_section(){
 	init_var_store(); // set up var store data structure
@@ -122,6 +147,7 @@ void parse_var_section(){
 		{
 			//test
 			//printf("all clear!!\n");
+			//debug_print_var_store();
 		}
 	}
 }
@@ -145,7 +171,6 @@ void parse_id_list(){
 		ungetToken();
 		//debug print
 		//printf("id list complete\n");
-		debug_print_var_store();
 	}
 }
 
@@ -158,42 +183,39 @@ struct assignmentStatement* parse_assign_stmt(){
 	{
 		assign_stmt = make_assignmentStatement();
 		assign_stmt->lhs = var_lookup(token);
+		// printf("HELLO\n");
+		// printf("LHS NAME%s\n", assign_stmt->lhs->name);
+		// printf("LHS VALUE%d\n", assign_stmt->lhs->value);
 		ttype = getToken();
-		if (ttype == EQUAL)
-		{
-			// parse expr 
-			// op1 op op2
+		// if (ttype == EQUAL)
+		// {
+		// 	// parse expr 
+		// 	// op1 op op2
 
-			ttype = getToken();
-			if (ttype == SEMICOLON)
-			{
-				ungetToken();
-				return assign_stmt;
-			} else
-			if (ttype == ID || ttype == NUM)
-			 {
-			 	// expr
-			 	struct assignmentStatement* expr;
-
-			 } 
-			
-		} else
-		if (ttype == SEMICOLON)
-		{
-			// declaration case
-			assign_stmt->op = 0;
-			assign_stmt->lhs = assign_stmt->op1;
-		}
-
-
-	} else
-	if (ttype == NUM)
-	{
-		ungetToken();
-		assign_stmt = make_assignmentStatement();
-		assign_stmt->op1 = parse_var();
-	}
-	
+		// 	ttype = getToken();
+		// 	if (ttype == SEMICOLON)
+		// 	{
+		// 		ungetToken();
+		// 		return assign_stmt;
+		// 	} else
+		// 	if (ttype == ID || ttype == NUM)
+		// 	 {
+		// 	 	// expr
+		// 	 	//struct assignmentStatement* expr;
+		// 	 	//assign_stmt->op1 = make_varNode();
+		// 	 	assign_stmt->op1 = parse_var();
+		// 	 	ttype = getToken();
+		// 	 	if (ttype == SEMICOLON)
+		// 	 	{
+		// 	 		assign_stmt->op = 0;
+		// 	 		assign_stmt->lhs->value = assign_stmt->op1->value;
+		// 	 		//debug_print_var_store();
+		// 	 		printf("ASSIGN STMT LHS NAME= %s", assign_stmt->lhs->name);
+		// 	 		printf("ASSIGN STMT LHS Value= %d", assign_stmt->lhs->value);
+		// 	 	}
+		// 	 } 	
+		// } 
+	} 
 	return assign_stmt;
 }
 
@@ -240,6 +262,7 @@ struct varNode* parse_var(){
 struct statementNode* parse_body(){
 	struct statementNode* body;
 	// make sure that we have a body open brace
+	ttype = getToken();
 	if (ttype == LBRACE)
 	{
 		init_flag = FALSE;

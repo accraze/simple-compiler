@@ -1,5 +1,5 @@
-Name= a  Value= 0
-Name= b  Value= 0
-Name= c  Value= 0
-Name= i  Value= 0
-Error: invalid value for stmt_type (0).
+a
+HELLO
+LHS NAMEa
+LHS VALUE0
+Error: assign_stmt->op1 is null.

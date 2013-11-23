@@ -16,7 +16,7 @@ struct statementNode* parse_stmt_list();
 
 
 struct assignmentStatement* parse_assign_stmt();
-struct statementNode* var_lookup(char* token);
+struct varNode* var_lookup(char* token);
 struct varNode* parse_var();
 
 
