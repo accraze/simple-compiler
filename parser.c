@@ -6,11 +6,16 @@
 #include "compiler.h"
 #include "parser.h"
 
-#define MAX 20
+//------------------------------\
+//       Global Decl
+//_______________________________\
+
 struct varNode* var_store[MAX];
 int var_total = 0;
 
 
+// looks up previously declared variables
+// and returns varNode that matches the token
 struct statementNode* var_lookup(char* token){
 	int i;
 	struct varNode* var;
@@ -25,7 +30,15 @@ struct statementNode* var_lookup(char* token){
 
 }
 
+void debug_print_var_store(){
+	int i;
+	for (i = 0; i < var_total; ++i)
+		{
+			printf("Name= %s  ",var_store[i]->name);
+			printf("Value= %d\n", var_store[i]->value);
+		}	
 
+}
 
 //-----------------------------------------------------------------------------
 // Parser Memory Build
@@ -54,7 +67,7 @@ void init_var_store(){
 		var_store[i]->name = (char*)malloc(sizeof(char) *MAX_TOKEN_LENGTH);
 	}
 	//debug
-	//printf("all done!!");
+	//printf("init store all done!!");
 }
 
 
@@ -131,7 +144,8 @@ void parse_id_list(){
 	{
 		ungetToken();
 		//debug print
-		printf("id list complete\n");
+		//printf("id list complete\n");
+		debug_print_var_store();
 	}
 }
 
@@ -143,12 +157,13 @@ struct assignmentStatement* parse_assign_stmt(){
 	if (ttype == ID)
 	{
 		assign_stmt = make_assignmentStatement();
-		assign_stmt->op1 = parse_var();
+		assign_stmt->lhs = var_lookup(token);
 		ttype = getToken();
 		if (ttype == EQUAL)
 		{
 			// parse expr 
 			// op1 op op2
+
 			ttype = getToken();
 			if (ttype == SEMICOLON)
 			{

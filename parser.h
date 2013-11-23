@@ -1,6 +1,7 @@
 #ifndef _PARSER_H_
 #define _PARSER_H_
 
+#define MAX 20
 
 int init_flag;
 
@@ -27,6 +28,7 @@ struct printStatement* make_printStatement();
 struct assignmentStatement* make_assignmentStatement();
 
 
+void debug_print_var_store();
 
 
 #endif /* _PARSER_H_ */
