@@ -6,12 +6,27 @@
 #include "compiler.h"
 #include "parser.h"
 
+#define MAX 20
+struct varNode* var_store[MAX];
+int var_total = 0;
+struct statementNode* var_lookup(char* token){
+
+}
 
 
-
+void init_varStore(){
+	int i;
+	for (i = 0; i < MAX; ++i)
+	{
+		var_store[i] = (struct varNode*)malloc(sizeof(struct varNode));
+		var_store[i]->id = (char*)malloc(sizeof(char) *MAX_TOKEN_LENGTH);
+	}
+	//debug
+	//printf("all done!!");
+}
 
 //-----------------------------------------------------------------------------
-//
+// Parser Memory Build
 //-----------------------------------------------------------------------------
 struct statementNode* make_statementNode(){        
         return (struct statementNode*) malloc(sizeof(struct statementNode));
