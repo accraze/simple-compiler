@@ -6,6 +6,7 @@ int init_flag;
 
 // Parsing Functions
 struct statementNode* parse_program();
+void parse_var_section();
 struct statementNode* parse_id_list();
 struct statementNode* parse_body();
 struct statementNode* parse_stmt_list();

@@ -98,6 +98,44 @@ struct statementNode* parse_program(){
 	return prog;
 }
 
+void parse_var_section(){
+	init_var_store(); // set up var store data structure
+	ttype = getToken();
+	if (ttype == ID)
+	{
+		ungetToken();
+		parse_id_list();
+		ttype = getToken();
+		if (ttype == SEMICOLON)
+		{
+			//test
+			//printf("all clear!!\n");
+		}
+	}
+}
+
+void parse_id_list(){
+	ttype = getToken();
+	if (ttype == ID)
+	{
+		strcpy(var_store[var_total]->id, token);
+		var_store[var_total]->value = 0; // always init to zero!!
+		var_total++;
+	}
+
+	ttype = getToken();
+	if (ttype == COMMA)
+	{
+		parse_id_list(); // call it again
+	} else
+	if (ttype == SEMICOLON)
+	{
+		ungetToken();
+		//debug print
+		printf("id list complete\n");
+	}
+}
+
 
 struct assignmentStatement* parse_assign_stmt(){
 	struct assignmentStatement* assign_stmt;
@@ -184,12 +222,6 @@ struct varNode* parse_var(){
 
 	return var;
 }
-
-// struct statementNode* parse_id_list(){
-// 	struct statementNode* id_list;
-
-// 	return id_list;
-// }
 
 struct statementNode* parse_body(){
 	struct statementNode* body;
