@@ -9,21 +9,23 @@
 #define MAX 20
 struct varNode* var_store[MAX];
 int var_total = 0;
+
+
 struct statementNode* var_lookup(char* token){
-
-}
-
-
-void init_varStore(){
 	int i;
-	for (i = 0; i < MAX; ++i)
+	struct varNode* var;
+	for (i = 0; i < var_total; ++i)
 	{
-		var_store[i] = (struct varNode*)malloc(sizeof(struct varNode));
-		var_store[i]->id = (char*)malloc(sizeof(char) *MAX_TOKEN_LENGTH);
+		if (strcmp(var_store[i]->id, token))
+		{
+			var = var_store[i];
+			return var;
+		}
 	}
-	//debug
-	//printf("all done!!");
+
 }
+
+
 
 //-----------------------------------------------------------------------------
 // Parser Memory Build
@@ -44,8 +46,21 @@ struct varNode* make_varNode(){
         return (struct varNode*) malloc(sizeof(struct varNode));
 }
 
+void init_var_store(){
+	int i;
+	for (i = 0; i < MAX; ++i)
+	{
+		var_store[i] = (struct varNode*)malloc(sizeof(struct varNode));
+		var_store[i]->id = (char*)malloc(sizeof(char) *MAX_TOKEN_LENGTH);
+	}
+	//debug
+	//printf("all done!!");
+}
 
 
+//-----------------------------------------------------------------------------
+// Parsing Functions
+//-----------------------------------------------------------------------------
 
 // entrance point from sample code:
 struct statementNode* parse_program_and_generate_intermediate_representation(){
