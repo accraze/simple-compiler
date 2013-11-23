@@ -85,7 +85,7 @@ struct statementNode* parse_program_and_generate_intermediate_representation(){
 	//printf("HELLO!!!!!!\n");
 
 	ttype=getToken();
-	printf("%s\n", token);
+	//printf("%s\n", token);
 	if (ttype == ID)
 	{
 		ungetToken();
@@ -187,36 +187,53 @@ struct assignmentStatement* parse_assign_stmt(){
 		// printf("LHS NAME%s\n", assign_stmt->lhs->name);
 		// printf("LHS VALUE%d\n", assign_stmt->lhs->value);
 		ttype = getToken();
-		// if (ttype == EQUAL)
-		// {
-		// 	// parse expr 
-		// 	// op1 op op2
+		if (ttype == EQUAL)
+		{
+			// parse expr 
+			// op1 op op2
 
-		// 	ttype = getToken();
-		// 	if (ttype == SEMICOLON)
-		// 	{
-		// 		ungetToken();
-		// 		return assign_stmt;
-		// 	} else
-		// 	if (ttype == ID || ttype == NUM)
-		// 	 {
-		// 	 	// expr
-		// 	 	//struct assignmentStatement* expr;
-		// 	 	//assign_stmt->op1 = make_varNode();
-		// 	 	assign_stmt->op1 = parse_var();
-		// 	 	ttype = getToken();
-		// 	 	if (ttype == SEMICOLON)
-		// 	 	{
-		// 	 		assign_stmt->op = 0;
-		// 	 		assign_stmt->lhs->value = assign_stmt->op1->value;
-		// 	 		//debug_print_var_store();
-		// 	 		printf("ASSIGN STMT LHS NAME= %s", assign_stmt->lhs->name);
-		// 	 		printf("ASSIGN STMT LHS Value= %d", assign_stmt->lhs->value);
-		// 	 	}
-		// 	 } 	
-		// } 
+			ttype = getToken();
+			//printf("token =%s\n", token );
+			// if (ttype == SEMICOLON)
+			// {
+			// 	ungetToken();
+			// 	return assign_stmt;
+			// } else
+			if (ttype == ID || ttype == NUM)
+			 {
+			 	// expr
+			 	assign_stmt->op1 = parse_var();
+			 	ttype = getToken();
+			 	
+			 	// only one operand case....
+			 	if (ttype == SEMICOLON)
+			 	{
+			 		assign_stmt->op = 0;
+			 		assign_stmt->lhs->value = assign_stmt->op1->value;
+			 		update_var_store(assign_stmt->lhs->name, assign_stmt->lhs->value);
+			 		//debug_print_var_store();
+			 		// printf("ASSIGN STMT LHS NAME= %s", assign_stmt->lhs->name);
+			 		// printf("ASSIGN STMT LHS Value= %d", assign_stmt->lhs->value);
+			 	}
+			 } 	
+		} 
 	} 
 	return assign_stmt;
+}
+
+void update_var_store(char* token, int new_value){
+	int i;
+	for (i = 0; i < var_total; ++i)
+	{
+		// printf("iter# %d = %s\n", i, var_store[i]->name);
+		// printf("token = %s\n", token );
+		if (strcmp(var_store[i]->name, token)==0){
+			var_store[i]->value = new_value;
+			//printf("UPDATED!\n");
+			//printf("%d\n",var_store[i]->value );
+		}
+	}		
+
 }
 
 struct printStatement* parse_print_stmt(){
@@ -228,7 +245,8 @@ struct printStatement* parse_print_stmt(){
 		ttype = getToken();
 		if (ttype == ID)
 		{
-			print_stmt->id = parse_var();
+			
+			print_stmt->id = var_lookup(token);
 		}
 	}
 	return print_stmt;
@@ -237,24 +255,20 @@ struct printStatement* parse_print_stmt(){
 struct varNode* parse_var(){
 	struct varNode* var;
 	
+	//make space for var node
 	var = make_varNode();
-	
-	
-	if(init_flag == TRUE){
-		strcpy(var->name, token);
-		var->value = 0; // all variables are initialized to 0.
-	} else {
+	// make space for char name
+	var->name = (char*)malloc(sizeof(char) *MAX_TOKEN_LENGTH);
 		
-		if (ttype == ID)
-		{
-			strcpy(var->name, token);
-		}
+		// if (ttype == ID)
+		// 	strcpy(var->name, token);
 		if (ttype == NUM)
 		{
+			//printf("yep its a num = %s \n", token );
 			strcpy(var->name, token);
+			//printf("var name%s\n", var->name );
 			var->value = atoi(token); //For literals (NUM), the value is the value of the number.
 		}
-	}
 
 	return var;
 }
@@ -297,13 +311,16 @@ struct statementNode* parse_stmt(){
 	 	stmt = make_statementNode();
 	 	stmt->stmt_type = ASSIGNSTMT;
 	 	stmt->assign_stmt = parse_assign_stmt();
+	 	//printf("assigned %s %d\n",stmt->assign_stmt->lhs->name, stmt->assign_stmt->lhs->value );
 	 	ttype = getToken();
+	 	//printf("token = %s\n", token );
 	 	if (ttype == SEMICOLON)
 	 	{	
+	 		//printf("WUNDERBAR\n");
 	 		ttype = getToken();
 	 		if (ttype == ID || ttype == PRINT)
 	 		{
-	 			ungetToken();
+	 			//ungetToken();
 	 			stmt->next = parse_stmt();
 	 		} else
 	 		if (ttype == RBRACE)
@@ -316,7 +333,28 @@ struct statementNode* parse_stmt(){
 	 		//stmt->assign_stmt->op1->value = stmt->next->assign_stmt->op1->value;
 			//return stmt;
 
-	 	} 
+	 	} else 
+	 	if (ttype == PRINT)
+	 	{
+		 	ungetToken();
+			stmt->print_stmt = make_printStatement();
+			stmt->stmt_type = PRINTSTMT;
+			stmt->print_stmt = parse_print_stmt();
+			ttype = getToken();
+			if (ttype == SEMICOLON)
+			{
+				ttype = getToken();
+				if (ttype == ID || ttype == PRINT)
+				{
+					ungetToken();
+					stmt->next = parse_stmt();
+				} else 
+				if (ttype == RBRACE){
+					ungetToken();
+					stmt->next = NULL;
+				}
+			}
+	 	}
 		return stmt;
 	} else 
 	if (ttype == PRINT)
