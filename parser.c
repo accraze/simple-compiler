@@ -16,7 +16,7 @@ struct statementNode* var_lookup(char* token){
 	struct varNode* var;
 	for (i = 0; i < var_total; ++i)
 	{
-		if (strcmp(var_store[i]->id, token))
+		if (strcmp(var_store[i]->name, token))
 		{
 			var = var_store[i];
 			return var;
@@ -51,7 +51,7 @@ void init_var_store(){
 	for (i = 0; i < MAX; ++i)
 	{
 		var_store[i] = (struct varNode*)malloc(sizeof(struct varNode));
-		var_store[i]->id = (char*)malloc(sizeof(char) *MAX_TOKEN_LENGTH);
+		var_store[i]->name = (char*)malloc(sizeof(char) *MAX_TOKEN_LENGTH);
 	}
 	//debug
 	//printf("all done!!");
@@ -79,8 +79,7 @@ struct statementNode* parse_program(){
 	{
 		//var section
 		ungetToken();
-		prog->stmt_type = ASSIGNSTMT;
-		prog->assign_stmt = parse_assign_stmt();
+		parse_var_section();
 		ttype = getToken();
 		if (ttype == LBRACE)
 		{
@@ -118,7 +117,7 @@ void parse_id_list(){
 	ttype = getToken();
 	if (ttype == ID)
 	{
-		strcpy(var_store[var_total]->id, token);
+		strcpy(var_store[var_total]->name, token);
 		var_store[var_total]->value = 0; // always init to zero!!
 		var_total++;
 	}

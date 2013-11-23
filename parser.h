@@ -5,12 +5,14 @@
 int init_flag;
 
 // Parsing Functions
-struct statementNode* parse_program();
+
 void parse_var_section();
-struct statementNode* parse_id_list();
-struct statementNode* parse_body();
-struct statementNode* parse_stmt_list();
+void parse_id_list();
 struct statementNode* parse_stmt();
+struct statementNode* parse_body();
+struct statementNode* parse_program();
+struct statementNode* parse_stmt_list();
+
 
 struct assignmentStatement* parse_assign_stmt();
 struct statementNode* var_lookup(char* token);
