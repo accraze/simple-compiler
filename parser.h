@@ -29,6 +29,7 @@ struct assignmentStatement* make_assignmentStatement();
 
 
 void debug_print_var_store();
+void update_var_store(char* token, int new_value);
 
 
 #endif /* _PARSER_H_ */

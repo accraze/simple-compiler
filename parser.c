@@ -16,21 +16,21 @@ int var_total = 0;
 
 // looks up previously declared variables
 // and returns varNode that matches the token
-struct varNode* var_lookup(char* token){
+struct varNode* var_lookup(char* token1){
 	int i;
 	struct varNode* var;
 	for (i = 0; i < var_total; ++i)
 	{
 		// printf("iter# %d = %s\n", i, var_store[i]->name);
 		// printf("token = %s\n", token );
-		if (strcmp(var_store[i]->name, token)==0)
+		if (strcmp(var_store[i]->name, token1)==0)
 		{
 			//printf("WASSUP!!\n");
 			var = var_store[i];
 			return var;
 		}
 	}
-	printf("WE CANT FIND SHIT!!\n" );
+	//printf("WE CANT FIND SHIT!!\n" );
 }
 
 void debug_print_var_store(){
@@ -177,8 +177,8 @@ void parse_id_list(){
 
 struct assignmentStatement* parse_assign_stmt(){
 	struct assignmentStatement* assign_stmt;
+	//printf("HELLOOOOOO3\n");
 	ttype = getToken();
-	
 	if (ttype == ID)
 	{
 		assign_stmt = make_assignmentStatement();
@@ -202,12 +202,14 @@ struct assignmentStatement* parse_assign_stmt(){
 			if (ttype == ID || ttype == NUM)
 			 {
 			 	// expr
+			 	ungetToken();
 			 	assign_stmt->op1 = parse_var();
 			 	ttype = getToken();
 			 	
 			 	// only one operand case....
 			 	if (ttype == SEMICOLON)
 			 	{
+			 		ungetToken();
 			 		assign_stmt->op = 0;
 			 		assign_stmt->lhs->value = assign_stmt->op1->value;
 			 		update_var_store(assign_stmt->lhs->name, assign_stmt->lhs->value);
@@ -254,7 +256,7 @@ struct printStatement* parse_print_stmt(){
 
 struct varNode* parse_var(){
 	struct varNode* var;
-	
+	ttype = getToken();
 	//make space for var node
 	var = make_varNode();
 	// make space for char name
@@ -292,9 +294,11 @@ struct statementNode* parse_body(){
 
 struct statementNode* parse_stmt_list(){
 	struct statementNode* stmt_list;
+	//printf("HELLOOOOOOO2\n");
 	ttype = getToken();
 	if (ttype == ID || ttype == NUM)
 	{
+		ungetToken();
 		stmt_list = parse_stmt();
 
 	}
@@ -304,15 +308,19 @@ struct statementNode* parse_stmt_list(){
 
 
 struct statementNode* parse_stmt(){
-	struct statementNode* stmt;
+	 struct statementNode* stmt;
+	 stmt = make_statementNode();
+	 // printf("HELLOOOOOOO2\n");
+	ttype = getToken();
 	if (ttype == ID)
 	{
 	 	ungetToken();
-	 	stmt = make_statementNode();
+	 	
 	 	stmt->stmt_type = ASSIGNSTMT;
 	 	stmt->assign_stmt = parse_assign_stmt();
 	 	//printf("assigned %s %d\n",stmt->assign_stmt->lhs->name, stmt->assign_stmt->lhs->value );
 	 	ttype = getToken();
+	 	//debug_print_var_store();
 	 	//printf("token = %s\n", token );
 	 	if (ttype == SEMICOLON)
 	 	{	
@@ -320,7 +328,7 @@ struct statementNode* parse_stmt(){
 	 		ttype = getToken();
 	 		if (ttype == ID || ttype == PRINT)
 	 		{
-	 			//ungetToken();
+	 			ungetToken();
 	 			stmt->next = parse_stmt();
 	 		} else
 	 		if (ttype == RBRACE)
@@ -332,31 +340,10 @@ struct statementNode* parse_stmt(){
 	 		// now assign the rhs value to lhs
 	 		//stmt->assign_stmt->op1->value = stmt->next->assign_stmt->op1->value;
 			//return stmt;
-
-	 	} else 
-	 	if (ttype == PRINT)
-	 	{
-		 	ungetToken();
-			stmt->print_stmt = make_printStatement();
-			stmt->stmt_type = PRINTSTMT;
-			stmt->print_stmt = parse_print_stmt();
-			ttype = getToken();
-			if (ttype == SEMICOLON)
-			{
-				ttype = getToken();
-				if (ttype == ID || ttype == PRINT)
-				{
-					ungetToken();
-					stmt->next = parse_stmt();
-				} else 
-				if (ttype == RBRACE){
-					ungetToken();
-					stmt->next = NULL;
-				}
-			}
 	 	}
-		return stmt;
-	} else 
+
+	} 
+	else 
 	if (ttype == PRINT)
 	{
 		ungetToken();
@@ -378,6 +365,7 @@ struct statementNode* parse_stmt(){
 			}
 		}
 	}
+	return stmt;
 }
 
 
