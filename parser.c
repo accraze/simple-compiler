@@ -109,32 +109,6 @@ struct statementNode* parse_program_and_generate_intermediate_representation(){
 	return program;
 }
 
-// struct statementNode* parse_program(){
-// 	struct statementNode* prog;
-// 	prog = make_statementNode();
-// 	ttype = getToken();
-// 	if (ttype == ID)
-// 	{
-// 		//var section
-// 		ungetToken();
-// 		parse_var_section();
-// 		ttype = getToken();
-// 		if (ttype == LBRACE)
-// 		{
-// 			prog->next = parse_body();
-// 		}
-// 	} else
-// 	if (ttype == LBRACE)
-// 	{
-// 		//body section
-// 		prog->next = parse_body();
-// 	}else{
-// 		//error?
-// 	}
-
-// 	return prog;
-// }
-
 void parse_var_section(){
 	init_var_store(); // set up var store data structure
 	ttype = getToken();
@@ -177,6 +151,10 @@ void parse_id_list(){
 
 struct assignmentStatement* parse_assign_stmt(){
 	struct assignmentStatement* assign_stmt;
+	int sum = 0;
+	int diff = 0;
+	int product = 0;
+	int quotient = 0;
 	//printf("HELLOOOOOO3\n");
 	ttype = getToken();
 	if (ttype == ID)
@@ -201,9 +179,16 @@ struct assignmentStatement* parse_assign_stmt(){
 			// } else
 			if (ttype == ID || ttype == NUM)
 			 {
-			 	// expr
-			 	ungetToken();
-			 	assign_stmt->op1 = parse_var();
+			 	if (ttype == ID)
+			 	{
+			 		assign_stmt->op1 = var_lookup(token);
+			 	} else
+			 	if (ttype == NUM)
+			 	{
+			 		ungetToken();
+			 		assign_stmt->op1 = parse_var();
+			 	}
+			 	
 			 	ttype = getToken();
 			 	
 			 	// only one operand case....
@@ -216,6 +201,60 @@ struct assignmentStatement* parse_assign_stmt(){
 			 		//debug_print_var_store();
 			 		// printf("ASSIGN STMT LHS NAME= %s", assign_stmt->lhs->name);
 			 		// printf("ASSIGN STMT LHS Value= %d", assign_stmt->lhs->value);
+			 	} else
+			 	if (ttype == PLUS || ttype == MINUS || ttype == MULT || ttype == DIV)
+			 	{
+			 		assign_stmt->op = ttype;
+			 		ttype = getToken();
+			 		if (ttype == ID || ttype == NUM)
+			 		{
+			 			if (ttype == ID)
+			 			{
+			 				//ungetToken();
+			 				assign_stmt->op2 = var_lookup(token);
+			 			} else 
+			 			if (ttype == NUM)
+			 			{
+			 				ungetToken();
+			 				assign_stmt->op2 = parse_var();
+			 			}
+			 			ttype = getToken();
+			 			if (ttype == SEMICOLON)
+			 			{
+			 				ungetToken();
+			 				switch (assign_stmt->op)
+			 				{
+			 					case PLUS:
+			 						sum = assign_stmt->op1->value + assign_stmt->op2->value;
+			 						assign_stmt->lhs->value = sum;
+			 						update_var_store(assign_stmt->lhs->name, assign_stmt->lhs->value);
+			 						break;
+			 					case MINUS:
+			 						
+			 						diff = assign_stmt->op1->value - assign_stmt->op2->value;
+			 						assign_stmt->lhs->value = diff;
+			 						update_var_store(assign_stmt->lhs->name, assign_stmt->lhs->value);
+			 						break;
+			 					case MULT:
+			 						
+			 						product = assign_stmt->op1->value * assign_stmt->op2->value;
+			 						assign_stmt->lhs->value = product;
+			 						update_var_store(assign_stmt->lhs->name, assign_stmt->lhs->value);
+			 						break;
+			 					case DIV:
+			 						
+			 						sum = assign_stmt->op1->value / assign_stmt->op2->value;
+			 						assign_stmt->lhs->value = quotient;
+			 						update_var_store(assign_stmt->lhs->name, assign_stmt->lhs->value);
+			 						break;
+			 					default:
+			 						printf("ERROR! Unknown Operator in Assignment Statement\n");
+			 						break;
+
+			 				}
+			 				return assign_stmt;
+			 			}
+			 		}
 			 	}
 			 } 	
 		} 
