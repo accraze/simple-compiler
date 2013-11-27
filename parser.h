@@ -14,7 +14,7 @@ struct statementNode* parse_body();
 struct statementNode* parse_program();
 struct statementNode* parse_stmt_list();
 
-
+struct ifStatement* parse_if_stmt()
 struct assignmentStatement* parse_assign_stmt();
 struct varNode* var_lookup(char* token);
 struct varNode* parse_var();
@@ -23,6 +23,7 @@ struct varNode* parse_var();
 // Memory Management Functions
 void init_var_store();
 struct varNode* make_varNode();
+struct ifStatement* make_ifStatement();
 struct statementNode* make_statementNode();
 struct printStatement* make_printStatement();
 struct assignmentStatement* make_assignmentStatement();

@@ -62,6 +62,10 @@ struct varNode* make_varNode(){
         return (struct varNode*) malloc(sizeof(struct varNode));
 }
 
+struct ifStatement* make_ifStatement(){        
+        return (struct ifStatement*) malloc(sizeof(struct ifStatement));
+}
+
 void init_var_store(){
 	int i;
 	for (i = 0; i < MAX; ++i)
@@ -277,6 +281,12 @@ void update_var_store(char* token, int new_value){
 
 }
 
+struct ifStatement* parse_if_stmt(){
+	struct ifStatement* if_stmt;
+
+	return if_stmt;
+}
+
 struct printStatement* parse_print_stmt(){
 	struct printStatement* print_stmt;
 	ttype = getToken();
@@ -403,6 +413,13 @@ struct statementNode* parse_stmt(){
 				stmt->next = NULL;
 			}
 		}
+	}else
+	if (ttype == IF)
+	{
+		ungetToken();
+		stmt->if_stmt = make_ifStatement();
+		stmt->stmt_type = IFSTMT;
+		stmt->if_stmt = parse_if_stmt();
 	}
 	return stmt;
 }
