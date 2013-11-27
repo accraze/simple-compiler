@@ -14,7 +14,7 @@ struct statementNode* parse_body();
 struct statementNode* parse_program();
 struct statementNode* parse_stmt_list();
 
-struct ifStatement* parse_if_stmt()
+struct ifStatement* parse_if_stmt();
 struct assignmentStatement* parse_assign_stmt();
 struct varNode* var_lookup(char* token);
 struct varNode* parse_var();

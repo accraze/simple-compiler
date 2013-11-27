@@ -283,7 +283,42 @@ void update_var_store(char* token, int new_value){
 
 struct ifStatement* parse_if_stmt(){
 	struct ifStatement* if_stmt;
-
+	struct statementNode* noop;
+		ttype = getToken();
+		if (ttype == ID || ttype == NUM)
+		{
+			//ungetToken();
+			// nows its a condition
+			// add condition code here
+			// ok?
+			if (ttype == ID)
+			{
+				if_stmt->op1 = var_lookup(token);
+			} else
+			if (ttype == NUM)
+			{
+				ungetToken();
+				if_stmt->op1 = parse_var();
+			}
+			ttype = getToken();
+			if (ttype == GREATER || ttype == NOTEQUAL || ttype ==LESS)
+			{
+				if_stmt->relop = ttype;
+				ttype = getToken();
+				if (ttype == ID || ttype == NUM)
+				{
+					if (ttype == ID )
+					{
+						if_stmt->op2 = var_lookup(token);
+					} else 
+					if (ttype == NUM)
+					{
+						ungetToken();
+						if_stmt->op2 = parse_var();
+					}
+				}
+			}
+		}
 	return if_stmt;
 }
 
@@ -358,6 +393,7 @@ struct statementNode* parse_stmt_list(){
 
 struct statementNode* parse_stmt(){
 	 struct statementNode* stmt;
+	 struct statementNode* noop;
 	 stmt = make_statementNode();
 	 // printf("HELLOOOOOOO2\n");
 	ttype = getToken();
@@ -413,13 +449,32 @@ struct statementNode* parse_stmt(){
 				stmt->next = NULL;
 			}
 		}
-	}else
+	}
+	else
 	if (ttype == IF)
 	{
 		ungetToken();
 		stmt->if_stmt = make_ifStatement();
 		stmt->stmt_type = IFSTMT;
 		stmt->if_stmt = parse_if_stmt();
+		stmt->if_stmt->true_branch = parse_body();
+		noop = make_statementNode();
+		noop->stmt_type = NOOPSTMT;
+		stmt->if_stmt->true_branch->next = noop;
+		stmt->if_stmt->false_branch = noop;
+		ttype = getToken();
+		if (ttype == ID || ttype == PRINT || ttype == IF || ttype == WHILE)
+		{
+			ungetToken();
+			stmt->next = noop;
+			noop->next = parse_stmt();
+		 } 
+		 //else
+		// if (ttype == RBRACE)
+		// {
+		// 	ungetToken();
+		// 	stmt->next = NULL;
+		// }
 	}
 	return stmt;
 }
