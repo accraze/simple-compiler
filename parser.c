@@ -460,13 +460,18 @@ struct statementNode* parse_stmt(){
 		stmt->if_stmt->true_branch = parse_body();
 		noop = make_statementNode();
 		noop->stmt_type = NOOPSTMT;
-		stmt->if_stmt->true_branch->next = noop;
+		while(stmt->if_stmt->true_branch->next != NULL){
+			stmt->if_stmt->true_branch = stmt->if_stmt->true_branch->next;
+			if(stmt->if_stmt->true_branch->next == NULL){
+				stmt->if_stmt->true_branch->next = noop;
+			}
+		}
+		
 		stmt->if_stmt->false_branch = noop;
 		ttype = getToken();
 		if (ttype == ID || ttype == PRINT || ttype == IF || ttype == WHILE)
 		{
 			ungetToken();
-			stmt->next = noop;
 			noop->next = parse_stmt();
 		 } 
 		 //else
