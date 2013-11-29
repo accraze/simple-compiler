@@ -1,13 +1,1 @@
-parsing new stmt
-ttype = 25
-parsing Assign Statement
-parsing new stmt
-ttype = 6
-WE HAVE A PRINT STM
-print var i
-have another??
-ttype 21
-token i
-Returning Print Statement
-Returning Assign Statement
 42

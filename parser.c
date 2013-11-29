@@ -21,24 +21,24 @@ struct varNode* var_lookup(char* token1){
 	struct varNode* var;
 	for (i = 0; i < var_total; ++i)
 	{
-		// printf("iter# %d = %s\n", i, var_store[i]->name);
-		// printf("token = %s\n", token );
+		// //printf("iter# %d = %s\n", i, var_store[i]->name);
+		// //printf("token = %s\n", token );
 		if (strcmp(var_store[i]->name, token1)==0)
 		{
-			//printf("WASSUP!!\n");
+			////printf("WASSUP!!\n");
 			var = var_store[i];
 			return var;
 		}
 	}
-	//printf("WE CANT FIND SHIT!!\n" );
+	////printf("WE CANT FIND SHIT!!\n" );
 }
 
 void debug_print_var_store(){
 	int i;
 	for (i = 0; i < var_total; ++i)
 		{
-			printf("Name= %s  ",var_store[i]->name);
-			printf("Value= %d\n", var_store[i]->value);
+			//printf("Name= %s  ",var_store[i]->name);
+			//printf("Value= %d\n", var_store[i]->value);
 		}	
 
 }
@@ -74,7 +74,7 @@ void init_var_store(){
 		var_store[i]->name = (char*)malloc(sizeof(char) *MAX_TOKEN_LENGTH);
 	}
 	//debug
-	//printf("init store all done!!");
+	////printf("init store all done!!");
 }
 
 
@@ -86,10 +86,10 @@ void init_var_store(){
 struct statementNode* parse_program_and_generate_intermediate_representation(){
 	struct statementNode* program;
 	init_flag = TRUE; // variables can initialized!!
-	//printf("HELLO!!!!!!\n");
+	////printf("HELLO!!!!!!\n");
 
 	ttype=getToken();
-	//printf("%s\n", token);
+	////printf("%s\n", token);
 	if (ttype == ID)
 	{
 		ungetToken();
@@ -124,7 +124,7 @@ void parse_var_section(){
 		if (ttype == SEMICOLON)
 		{
 			//test
-			//printf("all clear!!\n");
+			////printf("all clear!!\n");
 			//debug_print_var_store();
 		}
 	}
@@ -148,7 +148,7 @@ void parse_id_list(){
 	{
 		ungetToken();
 		//debug print
-		//printf("id list complete\n");
+		////printf("id list complete\n");
 	}
 }
 
@@ -159,15 +159,15 @@ struct assignmentStatement* parse_assign_stmt(){
 	int diff = 0;
 	int product = 0;
 	int quotient = 0;
-	//printf("HELLOOOOOO3\n");
+	////printf("HELLOOOOOO3\n");
 	ttype = getToken();
 	if (ttype == ID)
 	{
 		assign_stmt = make_assignmentStatement();
 		assign_stmt->lhs = var_lookup(token);
-		// printf("HELLO\n");
-		// printf("LHS NAME%s\n", assign_stmt->lhs->name);
-		// printf("LHS VALUE%d\n", assign_stmt->lhs->value);
+		// //printf("HELLO\n");
+		// //printf("LHS NAME%s\n", assign_stmt->lhs->name);
+		// //printf("LHS VALUE%d\n", assign_stmt->lhs->value);
 		ttype = getToken();
 		if (ttype == EQUAL)
 		{
@@ -175,7 +175,7 @@ struct assignmentStatement* parse_assign_stmt(){
 			// op1 op op2
 
 			ttype = getToken();
-			//printf("token =%s\n", token );
+			////printf("token =%s\n", token );
 			// if (ttype == SEMICOLON)
 			// {
 			// 	ungetToken();
@@ -203,8 +203,8 @@ struct assignmentStatement* parse_assign_stmt(){
 			 		assign_stmt->lhs->value = assign_stmt->op1->value;
 			 		update_var_store(assign_stmt->lhs->name, assign_stmt->lhs->value);
 			 		//debug_print_var_store();
-			 		// printf("ASSIGN STMT LHS NAME= %s", assign_stmt->lhs->name);
-			 		// printf("ASSIGN STMT LHS Value= %d", assign_stmt->lhs->value);
+			 		// //printf("ASSIGN STMT LHS NAME= %s", assign_stmt->lhs->name);
+			 		// //printf("ASSIGN STMT LHS Value= %d", assign_stmt->lhs->value);
 			 	} else
 			 	if (ttype == PLUS || ttype == MINUS || ttype == MULT || ttype == DIV)
 			 	{
@@ -252,7 +252,7 @@ struct assignmentStatement* parse_assign_stmt(){
 			 						update_var_store(assign_stmt->lhs->name, assign_stmt->lhs->value);
 			 						break;
 			 					default:
-			 						printf("ERROR! Unknown Operator in Assignment Statement\n");
+			 						//printf("ERROR! Unknown Operator in Assignment Statement\n");
 			 						break;
 
 			 				}
@@ -270,12 +270,12 @@ void update_var_store(char* token, int new_value){
 	int i;
 	for (i = 0; i < var_total; ++i)
 	{
-		// printf("iter# %d = %s\n", i, var_store[i]->name);
-		// printf("token = %s\n", token );
+		// //printf("iter# %d = %s\n", i, var_store[i]->name);
+		// //printf("token = %s\n", token );
 		if (strcmp(var_store[i]->name, token)==0){
 			var_store[i]->value = new_value;
-			//printf("UPDATED!\n");
-			//printf("%d\n",var_store[i]->value );
+			////printf("UPDATED!\n");
+			////printf("%d\n",var_store[i]->value );
 		}
 	}		
 
@@ -289,8 +289,8 @@ struct ifStatement* parse_if_stmt(){
 		if(ttype == IF){
 			ttype = getToken();
 		if_stmt = make_ifStatement();
-		printf("Parsing if stmt.....\n");
-		printf("%s\n", token );
+		//printf("Parsing if stmt.....\n");
+		//printf("%s\n", token );
 		if (ttype == ID || ttype == NUM)
 		{
 
@@ -301,7 +301,7 @@ struct ifStatement* parse_if_stmt(){
 			if (ttype == ID)
 			{
 				//if_stmt->op1 = make_varNode();
-				printf("heres the token op1 = %s\n", token);
+				//printf("heres the token op1 = %s\n", token);
 				if_stmt->op1 = var_lookup(token);
 			} else
 			if (ttype == NUM)
@@ -331,7 +331,7 @@ struct ifStatement* parse_if_stmt(){
 					}
 				}
 				ttype = getToken();
-				printf("here's yer token = %d \n", ttype);
+				//printf("here's yer token = %d \n", ttype);
 				if(ttype == LBRACE){
 					//ungetToken();
 					
@@ -339,12 +339,12 @@ struct ifStatement* parse_if_stmt(){
 					
 					if_stmt->true_branch = parse_stmt();
 					if(if_stmt->true_branch == NULL)
-						printf("OH FUCK!!!\n");
-					printf("if_stmt->true type %d\n", if_stmt->true_branch->stmt_type);
+						//printf("OH FUCK!!!\n");
+					//printf("if_stmt->true type %d\n", if_stmt->true_branch->stmt_type);
 					ttype = getToken();
-					printf("here's yer token = %d \n", ttype);
+					//printf("here's yer token = %d \n", ttype);
 					if(ttype == RBRACE){
-						printf("done parsing if sTMT!!!\n");
+						//printf("done parsing if sTMT!!!\n");
 						return if_stmt;
 					}
 
@@ -383,9 +383,9 @@ struct varNode* parse_var(){
 		// 	strcpy(var->name, token);
 		if (ttype == NUM)
 		{
-			//printf("yep its a num = %s \n", token );
+			////printf("yep its a num = %s \n", token );
 			strcpy(var->name, token);
-			//printf("var name%s\n", var->name );
+			////printf("var name%s\n", var->name );
 			var->value = atoi(token); //For literals (NUM), the value is the value of the number.
 		}
 
@@ -411,7 +411,7 @@ struct statementNode* parse_body(){
 
 struct statementNode* parse_stmt_list(){
 	struct statementNode* stmt_list;
-	//printf("HELLOOOOOOO2\n");
+	////printf("HELLOOOOOOO2\n");
 	ttype = getToken();
 	if (ttype == ID || ttype == NUM)
 	{
@@ -428,22 +428,22 @@ struct statementNode* parse_stmt(){
 	 struct statementNode* stmt;
 	 struct statementNode* noop;
 	 stmt = make_statementNode();
-	printf("parsing new stmt\n");
+	//printf("parsing new stmt\n");
 	ttype = getToken();
-	printf("ttype = %d\n", ttype );
+	//printf("ttype = %d\n", ttype );
 	if (ttype == ID)
 	{
 	 	ungetToken();
-	 	printf("parsing Assign Statement\n");
+	 	//printf("parsing Assign Statement\n");
 	 	stmt->stmt_type = ASSIGNSTMT;
 	 	stmt->assign_stmt = parse_assign_stmt();
-	 	//printf("assigned %s %d\n",stmt->assign_stmt->lhs->name, stmt->assign_stmt->lhs->value );
+	 	////printf("assigned %s %d\n",stmt->assign_stmt->lhs->name, stmt->assign_stmt->lhs->value );
 	 	ttype = getToken();
 	 	//debug_print_var_store();
-	 	//printf("token = %s\n", token );
+	 	////printf("token = %s\n", token );
 	 	if (ttype == SEMICOLON)
 	 	{	
-	 		//printf("WUNDERBAR\n");
+	 		////printf("WUNDERBAR\n");
 	 		ttype = getToken();
 	 		if (ttype == ID || ttype == PRINT || ttype == IF || ttype == WHILE)
 	 		{
@@ -456,7 +456,7 @@ struct statementNode* parse_stmt(){
 	 			stmt->next = NULL;
 	 		}
 	 		
-	 		printf("Returning Assign Statement\n");
+	 		//printf("Returning Assign Statement\n");
 			return stmt;
 	 	}
 
@@ -465,18 +465,18 @@ struct statementNode* parse_stmt(){
 	if (ttype == PRINT)
 	{
 		ungetToken();
-		printf("WE HAVE A PRINT STM\n");
+		//printf("WE HAVE A PRINT STM\n");
 		stmt->print_stmt = make_printStatement();
 		stmt->stmt_type = PRINTSTMT;
 		stmt->print_stmt = parse_print_stmt();
-		printf("print var %s\n", stmt->print_stmt->id->name );
+		//printf("print var %s\n", stmt->print_stmt->id->name );
 		ttype = getToken();
 		if (ttype == SEMICOLON)
 		{
-			printf("have another??\n");
+			//printf("have another??\n");
 			ttype = getToken();
-			printf("ttype %d\n", ttype);
-			printf("token %s\n", token );
+			//printf("ttype %d\n", ttype);
+			//printf("token %s\n", token );
 			if (ttype == ID || ttype == PRINT)
 			{
 				ungetToken();
@@ -484,7 +484,7 @@ struct statementNode* parse_stmt(){
 			} else 
 			if (ttype == RBRACE){
 				ungetToken();
-				printf("Returning Print Statement\n");
+				//printf("Returning Print Statement\n");
 				stmt->next = NULL;
 				return stmt;
 			}
@@ -493,7 +493,7 @@ struct statementNode* parse_stmt(){
 	else
 	if (ttype == IF)
 	{
-		printf("IF detected.... now make stmt type IFSTMT\n");
+		//printf("IF detected.... now make stmt type IFSTMT\n");
 		ungetToken();
 		stmt->if_stmt = make_ifStatement();
 		stmt->stmt_type = IFSTMT;
@@ -504,7 +504,7 @@ struct statementNode* parse_stmt(){
 		
 		
 			if(stmt->if_stmt->true_branch->next == NULL){
-				printf("STMT->NEXT IS NULL! pre assign NOOP\n");
+				//printf("STMT->NEXT IS NULL! pre assign NOOP\n");
 				stmt->if_stmt->true_branch->next = noop;
 			}
 		
@@ -514,7 +514,7 @@ struct statementNode* parse_stmt(){
 		{
 			ungetToken();
 			stmt->next = noop;
-			printf(" next stmt type !! %d\n", stmt->next->stmt_type );
+			////printf(" next stmt type !! %d\n", stmt->next->stmt_type );
 			noop->next=parse_stmt();
 		 } 
 		 else
@@ -523,13 +523,16 @@ struct statementNode* parse_stmt(){
 			ungetToken();
 			stmt->next = NULL;
 			stmt->next = noop;
-			printf(" next stmt type !! %d\n", stmt->next->stmt_type );
-			noop->next=parse_stmt();
+			////printf(" next stmt type !! %d\n", stmt->next->stmt_type );
+			noop->next= NULL;
 		}
-		printf("Returning If Statement\n");
+		////printf("Returning If Statement\n");
 		return stmt;
+	 } else
+	 if(ttype == NULL){
+
 	 }
-	 printf("Exiting Statement Node\n");
+	// //printf("Exiting Statement Node\n");
 	return stmt;
 }
 

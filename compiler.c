@@ -226,7 +226,7 @@ void execute_program(struct statementNode * program)
 		{
 			case NOOPSTMT:
 				pc = pc->next;
-				printf("WE IN A NO OP@@@\n");
+				//printf("WE IN A NO OP@@@\n");
 				break;
 
 			case PRINTSTMT:
