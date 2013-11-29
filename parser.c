@@ -283,22 +283,33 @@ void update_var_store(char* token, int new_value){
 
 struct ifStatement* parse_if_stmt(){
 	struct ifStatement* if_stmt;
-	struct statementNode* noop;
+	//struct statementNode* noop;
 		ttype = getToken();
+		//ttype = getToken();
+		if(ttype == IF){
+			ttype = getToken();
+		if_stmt = make_ifStatement();
+		printf("Parsing if stmt.....\n");
+		printf("%s\n", token );
 		if (ttype == ID || ttype == NUM)
 		{
+
 			//ungetToken();
 			// nows its a condition
 			// add condition code here
 			// ok?
 			if (ttype == ID)
 			{
+				//if_stmt->op1 = make_varNode();
+				printf("heres the token op1 = %s\n", token);
 				if_stmt->op1 = var_lookup(token);
 			} else
 			if (ttype == NUM)
 			{
 				ungetToken();
+				//if_stmt->op1 = make_varNode();
 				if_stmt->op1 = parse_var();
+
 			}
 			ttype = getToken();
 			if (ttype == GREATER || ttype == NOTEQUAL || ttype ==LESS)
@@ -309,16 +320,38 @@ struct ifStatement* parse_if_stmt(){
 				{
 					if (ttype == ID )
 					{
+						//if_stmt->op2 = make_varNode();
 						if_stmt->op2 = var_lookup(token);
 					} else 
 					if (ttype == NUM)
 					{
 						ungetToken();
+						//if_stmt->op2 = make_varNode();
 						if_stmt->op2 = parse_var();
 					}
 				}
-			}
+				ttype = getToken();
+				printf("here's yer token = %d \n", ttype);
+				if(ttype == LBRACE){
+					//ungetToken();
+					
+					// get the body
+					
+					if_stmt->true_branch = parse_stmt();
+					if(if_stmt->true_branch == NULL)
+						printf("OH FUCK!!!\n");
+					printf("if_stmt->true type %d\n", if_stmt->true_branch->stmt_type);
+					ttype = getToken();
+					printf("here's yer token = %d \n", ttype);
+					if(ttype == RBRACE){
+						printf("done parsing if sTMT!!!\n");
+						return if_stmt;
+					}
+
+				} 
+			 }
 		}
+	}
 	return if_stmt;
 }
 
@@ -395,12 +428,13 @@ struct statementNode* parse_stmt(){
 	 struct statementNode* stmt;
 	 struct statementNode* noop;
 	 stmt = make_statementNode();
-	 // printf("HELLOOOOOOO2\n");
+	printf("parsing new stmt\n");
 	ttype = getToken();
+	printf("ttype = %d\n", ttype );
 	if (ttype == ID)
 	{
 	 	ungetToken();
-	 	
+	 	printf("parsing Assign Statement\n");
 	 	stmt->stmt_type = ASSIGNSTMT;
 	 	stmt->assign_stmt = parse_assign_stmt();
 	 	//printf("assigned %s %d\n",stmt->assign_stmt->lhs->name, stmt->assign_stmt->lhs->value );
@@ -411,7 +445,7 @@ struct statementNode* parse_stmt(){
 	 	{	
 	 		//printf("WUNDERBAR\n");
 	 		ttype = getToken();
-	 		if (ttype == ID || ttype == PRINT)
+	 		if (ttype == ID || ttype == PRINT || ttype == IF || ttype == WHILE)
 	 		{
 	 			ungetToken();
 	 			stmt->next = parse_stmt();
@@ -422,9 +456,8 @@ struct statementNode* parse_stmt(){
 	 			stmt->next = NULL;
 	 		}
 	 		
-	 		// now assign the rhs value to lhs
-	 		//stmt->assign_stmt->op1->value = stmt->next->assign_stmt->op1->value;
-			//return stmt;
+	 		printf("Returning Assign Statement\n");
+			return stmt;
 	 	}
 
 	} 
@@ -432,13 +465,18 @@ struct statementNode* parse_stmt(){
 	if (ttype == PRINT)
 	{
 		ungetToken();
+		printf("WE HAVE A PRINT STM\n");
 		stmt->print_stmt = make_printStatement();
 		stmt->stmt_type = PRINTSTMT;
 		stmt->print_stmt = parse_print_stmt();
+		printf("print var %s\n", stmt->print_stmt->id->name );
 		ttype = getToken();
 		if (ttype == SEMICOLON)
 		{
+			printf("have another??\n");
 			ttype = getToken();
+			printf("ttype %d\n", ttype);
+			printf("token %s\n", token );
 			if (ttype == ID || ttype == PRINT)
 			{
 				ungetToken();
@@ -446,41 +484,52 @@ struct statementNode* parse_stmt(){
 			} else 
 			if (ttype == RBRACE){
 				ungetToken();
+				printf("Returning Print Statement\n");
 				stmt->next = NULL;
+				return stmt;
 			}
 		}
 	}
 	else
 	if (ttype == IF)
 	{
+		printf("IF detected.... now make stmt type IFSTMT\n");
 		ungetToken();
 		stmt->if_stmt = make_ifStatement();
 		stmt->stmt_type = IFSTMT;
 		stmt->if_stmt = parse_if_stmt();
-		stmt->if_stmt->true_branch = parse_body();
+		//stmt->if_stmt->true_branch = parse_body();
 		noop = make_statementNode();
 		noop->stmt_type = NOOPSTMT;
-		while(stmt->if_stmt->true_branch->next != NULL){
-			stmt->if_stmt->true_branch = stmt->if_stmt->true_branch->next;
+		
+		
 			if(stmt->if_stmt->true_branch->next == NULL){
+				printf("STMT->NEXT IS NULL! pre assign NOOP\n");
 				stmt->if_stmt->true_branch->next = noop;
 			}
-		}
 		
 		stmt->if_stmt->false_branch = noop;
 		ttype = getToken();
 		if (ttype == ID || ttype == PRINT || ttype == IF || ttype == WHILE)
 		{
 			ungetToken();
-			noop->next = parse_stmt();
+			stmt->next = noop;
+			printf(" next stmt type !! %d\n", stmt->next->stmt_type );
+			noop->next=parse_stmt();
 		 } 
-		 //else
-		// if (ttype == RBRACE)
-		// {
-		// 	ungetToken();
-		// 	stmt->next = NULL;
-		// }
-	}
+		 else
+		if (ttype == RBRACE)
+		{
+			ungetToken();
+			stmt->next = NULL;
+			stmt->next = noop;
+			printf(" next stmt type !! %d\n", stmt->next->stmt_type );
+			noop->next=parse_stmt();
+		}
+		printf("Returning If Statement\n");
+		return stmt;
+	 }
+	 printf("Exiting Statement Node\n");
 	return stmt;
 }
 

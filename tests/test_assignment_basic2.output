@@ -1,3 +1,51 @@
+parsing new stmt
+ttype = 25
+parsing Assign Statement
+parsing new stmt
+ttype = 25
+parsing Assign Statement
+parsing new stmt
+ttype = 6
+WE HAVE A PRINT STM
+print var a
+have another??
+ttype 6
+token print
+parsing new stmt
+ttype = 6
+WE HAVE A PRINT STM
+print var b
+have another??
+ttype 25
+token a
+parsing new stmt
+ttype = 25
+parsing Assign Statement
+parsing new stmt
+ttype = 25
+parsing Assign Statement
+parsing new stmt
+ttype = 6
+WE HAVE A PRINT STM
+print var a
+have another??
+ttype 6
+token print
+parsing new stmt
+ttype = 6
+WE HAVE A PRINT STM
+print var b
+have another??
+ttype 21
+token b
+Returning Print Statement
+Exiting Statement Node
+Returning Assign Statement
+Returning Assign Statement
+Exiting Statement Node
+Exiting Statement Node
+Returning Assign Statement
+Returning Assign Statement
 457
 221
 65537

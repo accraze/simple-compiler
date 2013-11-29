@@ -1,2 +1,34 @@
+parsing new stmt
+ttype = 25
+parsing Assign Statement
+parsing new stmt
+ttype = 25
+parsing Assign Statement
+parsing new stmt
+ttype = 6
+WE HAVE A PRINT STM
+print var a
+have another??
+ttype 6
+token print
+parsing new stmt
+ttype = 6
+WE HAVE A PRINT STM
+print var b
+have another??
+ttype 25
+token i
+parsing new stmt
+ttype = 25
+parsing Assign Statement
+parsing new stmt
+ttype = 3
+Exiting Statement Node
+Returning Assign Statement
+Exiting Statement Node
+Exiting Statement Node
+Returning Assign Statement
+Returning Assign Statement
 1
 1
+Error: invalid value for stmt_type (0).

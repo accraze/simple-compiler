@@ -1,0 +1,138 @@
+parsing new stmt
+ttype = 25
+parsing Assign Statement
+parsing new stmt
+ttype = 25
+parsing Assign Statement
+parsing new stmt
+ttype = 25
+parsing Assign Statement
+parsing new stmt
+ttype = 25
+parsing Assign Statement
+parsing new stmt
+ttype = 2
+IF detected.... now make stmt type IFSTMT
+Parsing if stmt.....
+d
+heres the token op1 = d
+here's yer token = 20 
+parsing new stmt
+ttype = 6
+WE HAVE A PRINT STM
+print var a
+have another??
+ttype 6
+token print
+parsing new stmt
+ttype = 6
+WE HAVE A PRINT STM
+print var b
+have another??
+ttype 6
+token print
+parsing new stmt
+ttype = 6
+WE HAVE A PRINT STM
+print var c
+have another??
+ttype 6
+token print
+parsing new stmt
+ttype = 6
+WE HAVE A PRINT STM
+print var d
+have another??
+ttype 21
+token d
+Returning Print Statement
+Exiting Statement Node
+Exiting Statement Node
+Exiting Statement Node
+if_stmt->true type 101
+here's yer token = 21 
+done parsing if sTMT!!!
+ next stmt type !! 100
+parsing new stmt
+ttype = 25
+parsing Assign Statement
+parsing new stmt
+ttype = 25
+parsing Assign Statement
+parsing new stmt
+ttype = 2
+IF detected.... now make stmt type IFSTMT
+Parsing if stmt.....
+b
+heres the token op1 = b
+here's yer token = 20 
+parsing new stmt
+ttype = 6
+WE HAVE A PRINT STM
+print var a
+have another??
+ttype 6
+token print
+parsing new stmt
+ttype = 6
+WE HAVE A PRINT STM
+print var b
+have another??
+ttype 6
+token print
+parsing new stmt
+ttype = 6
+WE HAVE A PRINT STM
+print var c
+have another??
+ttype 6
+token print
+parsing new stmt
+ttype = 6
+WE HAVE A PRINT STM
+print var d
+have another??
+ttype 21
+token d
+Returning Print Statement
+Exiting Statement Node
+Exiting Statement Node
+Exiting Statement Node
+if_stmt->true type 101
+here's yer token = 21 
+done parsing if sTMT!!!
+ next stmt type !! 100
+parsing new stmt
+ttype = 2
+IF detected.... now make stmt type IFSTMT
+Parsing if stmt.....
+b
+heres the token op1 = b
+here's yer token = 20 
+parsing new stmt
+ttype = 25
+parsing Assign Statement
+parsing new stmt
+ttype = 6
+WE HAVE A PRINT STM
+print var a
+have another??
+ttype 2
+token IF
+Exiting Statement Node
+Returning Assign Statement
+if_stmt->true type 102
+here's yer token = 25 
+Returning If Statement
+Returning If Statement
+Returning Assign Statement
+Returning Assign Statement
+Returning If Statement
+Returning Assign Statement
+Returning Assign Statement
+Returning Assign Statement
+Returning Assign Statement
+3
+2
+9
+14
