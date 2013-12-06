@@ -18,6 +18,7 @@ struct ifStatement* parse_if_stmt();
 struct assignmentStatement* parse_assign_stmt();
 struct varNode* var_lookup(char* token);
 struct varNode* parse_var();
+void append(struct statementNode* true_branch, struct statementNode* nop);
 
 
 // Memory Management Functions
