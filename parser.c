@@ -133,6 +133,7 @@ struct statementNode* parse_program_and_generate_intermediate_representation(){
 }
 
 void parse_var_section(){
+	print_debug("!!! PARSE var_section() !!!\n");
 	init_var_store(); // set up var store data structure
 	ttype = getToken();
 	if (ttype == ID)
@@ -150,6 +151,7 @@ void parse_var_section(){
 }
 
 void parse_id_list(){
+	print_debug("!!! PARSE id_list() !!!\n");
 	ttype = getToken();
 	if (ttype == ID)
 	{
@@ -173,6 +175,7 @@ void parse_id_list(){
 
 
 struct assignmentStatement* parse_assign_stmt(){
+	print_debug("!!! PARSE assign stmt() !!!\n");
 	struct assignmentStatement* assign_stmt;
 	int sum = 0;
 	int diff = 0;
@@ -288,6 +291,7 @@ struct assignmentStatement* parse_assign_stmt(){
 }
 
 struct ifStatement* parse_if_stmt(){
+	print_debug("!!! PARSE if_stmt() !!!\n");
 	struct ifStatement* if_stmt;
 	//struct statementNode* noop;
 		ttype = getToken();
@@ -362,6 +366,7 @@ struct ifStatement* parse_if_stmt(){
 }
 
 struct printStatement* parse_print_stmt(){
+	print_debug("!!! PARSE print stmt() !!!\n");
 	struct printStatement* print_stmt;
 	ttype = getToken();
 	if (ttype == PRINT)
@@ -399,6 +404,7 @@ struct varNode* parse_var(){
 }
 
 struct statementNode* parse_body(){
+	print_debug("!!! PARSE body()!!!\n");
 	struct statementNode* body;
 	// make sure that we have a body open brace
 	ttype = getToken();
@@ -416,6 +422,7 @@ struct statementNode* parse_body(){
 }
 
 struct statementNode* parse_stmt_list(){
+	print_debug("!!! PARSE stmt_list() !!!\n");
 	struct statementNode* stmt_list;
 	//////printf("HELLOOOOOOO2\n");
 	ttype = getToken();
@@ -431,6 +438,7 @@ struct statementNode* parse_stmt_list(){
 
 
 struct statementNode* parse_stmt(){
+	 print_debug("!!! PARSE stmt() !!!\n");
 	 struct statementNode* stmt;
 	 struct statementNode* noop;
 	 stmt = make_statementNode();
@@ -481,11 +489,10 @@ struct statementNode* parse_stmt(){
 		ttype = getToken();
 		if (ttype == SEMICOLON)
 		{
-			////printf("have another??\n");
 			ttype = getToken();
 			////printf("ttype %d\n", ttype);
 			////printf("token %s\n", token );
-			if (ttype == ID || ttype == PRINT)
+			if (ttype == ID || ttype == PRINT || ttype == IF || ttype == WHILE)
 			{
 				ungetToken();
 				stmt->next = parse_stmt();
@@ -522,7 +529,6 @@ struct statementNode* parse_stmt(){
 		iter->next = noop;
 		
 		//////printf("Returning If Statement\n");
-		return stmt;
 	 } else
 	 if (ttype == WHILE)
 	 {

@@ -6,7 +6,7 @@
 #include "compiler.h"
 #include "parser.h"
 
-#define DEBUG 1	 // 1 => Turn ON debugging, 0 => Turn OFF debugging
+#define DEBUG 0	 // 1 => Turn ON debugging, 0 => Turn OFF debugging
 
 void print_debug(const char * format, ...)
 {
