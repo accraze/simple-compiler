@@ -27,6 +27,7 @@ struct varNode* make_varNode();
 struct ifStatement* make_ifStatement();
 struct statementNode* make_statementNode();
 struct printStatement* make_printStatement();
+struct gotoStatement* make_gotoStatementNode();
 struct assignmentStatement* make_assignmentStatement();
 
 

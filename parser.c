@@ -43,6 +43,21 @@ void debug_print_var_store(){
 
 }
 
+void update_var_store(char* token, int new_value){
+	int i;
+	for (i = 0; i < var_total; ++i)
+	{
+		// ////printf("iter# %d = %s\n", i, var_store[i]->name);
+		// ////printf("token = %s\n", token );
+		if (strcmp(var_store[i]->name, token)==0){
+			var_store[i]->value = new_value;
+			//////printf("UPDATED!\n");
+			//////printf("%d\n",var_store[i]->value );
+		}
+	}		
+
+}
+
 //-----------------------------------------------------------------------------
 // Parser Memory Build
 //-----------------------------------------------------------------------------
@@ -64,6 +79,10 @@ struct varNode* make_varNode(){
 
 struct ifStatement* make_ifStatement(){        
         return (struct ifStatement*) malloc(sizeof(struct ifStatement));
+}
+
+struct gotoStatement* make_gotoStatementNode(){        
+        return (struct gotoStatement*) malloc(sizeof(struct gotoStatement));
 }
 
 void init_var_store(){
@@ -186,11 +205,13 @@ struct assignmentStatement* parse_assign_stmt(){
 			 	if (ttype == ID)
 			 	{
 			 		assign_stmt->op1 = var_lookup(token);
+			 		//printf("op1 name =%s\n", assign_stmt->op1->name );
 			 	} else
 			 	if (ttype == NUM)
 			 	{
 			 		ungetToken();
 			 		assign_stmt->op1 = parse_var();
+			 		//printf("op1 name =%s\n", assign_stmt->op1->name );
 			 	}
 			 	
 			 	ttype = getToken();
@@ -202,7 +223,7 @@ struct assignmentStatement* parse_assign_stmt(){
 			 		assign_stmt->op = 0;
 			 		assign_stmt->lhs->value = assign_stmt->op1->value;
 			 		update_var_store(assign_stmt->lhs->name, assign_stmt->lhs->value);
-			 		debug_print_var_store();
+			 		//debug_print_var_store();
 			 		// ////printf("ASSIGN STMT LHS NAME= %s", assign_stmt->lhs->name);
 			 		// ////printf("ASSIGN STMT LHS Value= %d", assign_stmt->lhs->value);
 			 	} else
@@ -266,29 +287,14 @@ struct assignmentStatement* parse_assign_stmt(){
 	return assign_stmt;
 }
 
-void update_var_store(char* token, int new_value){
-	int i;
-	for (i = 0; i < var_total; ++i)
-	{
-		// ////printf("iter# %d = %s\n", i, var_store[i]->name);
-		// ////printf("token = %s\n", token );
-		if (strcmp(var_store[i]->name, token)==0){
-			var_store[i]->value = new_value;
-			//////printf("UPDATED!\n");
-			//////printf("%d\n",var_store[i]->value );
-		}
-	}		
-
-}
-
 struct ifStatement* parse_if_stmt(){
 	struct ifStatement* if_stmt;
 	//struct statementNode* noop;
 		ttype = getToken();
 		//ttype = getToken();
-		if(ttype == IF){
+		if(ttype == IF || ttype == WHILE){
 			ttype = getToken();
-		if_stmt = make_ifStatement();
+			if_stmt = make_ifStatement();
 		////printf("Parsing if stmt.....\n");
 		////printf("%s\n", token );
 		if (ttype == ID || ttype == NUM)
@@ -497,7 +503,7 @@ struct statementNode* parse_stmt(){
 	{
 		//printf("IF detected.... now make stmt type IFSTMT\n");
 		ungetToken();
-		stmt->if_stmt = make_ifStatement();
+		//stmt->if_stmt = make_ifStatement();
 		stmt->stmt_type = IFSTMT;
 		stmt->if_stmt = parse_if_stmt();
 		
@@ -518,8 +524,38 @@ struct statementNode* parse_stmt(){
 		//////printf("Returning If Statement\n");
 		return stmt;
 	 } else
-	 if(ttype == NULL){
+	 if (ttype == WHILE)
+	 {
+	 	ungetToken();
+	 	stmt->stmt_type = IFSTMT;
+	 	stmt->if_stmt = parse_if_stmt();
 
+	 	noop = make_statementNode();
+	 	noop->stmt_type = NOOPSTMT;
+		noop->next = parse_stmt();
+
+		stmt->next = noop;
+		stmt->if_stmt->false_branch = noop;
+
+		// now make GOTO statement
+		struct statementNode * temp;
+		temp = make_statementNode();
+		temp->next = stmt->if_stmt->true_branch;
+		while(temp->next != NULL){
+			temp = temp->next;
+		}
+
+		struct statementNode * goto_holder;
+		goto_holder = make_statementNode();
+        goto_holder->stmt_type = GOTOSTMT;
+
+        temp->next = goto_holder;
+        struct gotoStatement * goto_stmt = make_gotoStatementNode();
+        temp->next->goto_stmt = goto_stmt;
+        goto_stmt->target = stmt;
+	 }
+	 else{
+	 	stmt->next = parse_stmt();
 	 }
 	// ////printf("Exiting Statement Node\n");
 	return stmt;
