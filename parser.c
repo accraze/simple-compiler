@@ -348,20 +348,20 @@ struct ifStatement* parse_if_stmt(){
 					// get the body
 					
 					if_stmt->true_branch = parse_stmt();
-					if(if_stmt->true_branch == NULL)
-						////printf("OH FUCK!!!\n");
-					////printf("if_stmt->true type %d\n", if_stmt->true_branch->stmt_type);
-					ttype = getToken();
+
 					////printf("here's yer token = %d \n", ttype);
-					if(ttype == RBRACE){
+					
 						////printf("done parsing if sTMT!!!\n");
+						//ungetToken();
+						print_debug("LEAVING IF STMT!! \n");
 						return if_stmt;
-					}
+					
 
 				} 
 			 }
 		}
 	}
+	print_debug("LEAVING IF STMT!! \n");
 	return if_stmt;
 }
 
@@ -445,7 +445,7 @@ struct statementNode* parse_stmt(){
 	 stmt->stmt_type = NOOPSTMT;
 	//printf("parsing new stmt\n");
 	ttype = getToken();
-	//printf("ttype = %d\n", ttype );
+	print_debug("stmt ttype is = %d \n", ttype);
 	if (ttype == ID)
 	{
 	 	ungetToken();
@@ -490,7 +490,7 @@ struct statementNode* parse_stmt(){
 		if (ttype == SEMICOLON)
 		{
 			ttype = getToken();
-			////printf("ttype %d\n", ttype);
+			//printf("ttype %d\n", ttype);
 			////printf("token %s\n", token );
 			if (ttype == ID || ttype == PRINT || ttype == IF || ttype == WHILE)
 			{
@@ -559,6 +559,9 @@ struct statementNode* parse_stmt(){
         struct gotoStatement * goto_stmt = make_gotoStatementNode();
         temp->next->goto_stmt = goto_stmt;
         goto_stmt->target = stmt;
+	 } else if (ttype == -1)
+	 {
+	 	return stmt;
 	 }
 	 else{
 	 	stmt->next = parse_stmt();
