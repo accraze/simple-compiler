@@ -30,15 +30,14 @@ struct varNode* var_lookup(char* token1){
 			return var;
 		}
 	}
-	//////printf("WE CANT FIND SHIT!!\n" );
 }
 
 void debug_print_var_store(){
 	int i;
 	for (i = 0; i < var_total; ++i)
 		{
-			////printf("Name= %s  ",var_store[i]->name);
-			////printf("Value= %d\n", var_store[i]->value);
+			printf("Name= %s  ",var_store[i]->name);
+			printf("Value= %d\n", var_store[i]->value);
 		}	
 
 }
@@ -224,8 +223,8 @@ struct assignmentStatement* parse_assign_stmt(){
 			 	{
 			 		ungetToken();
 			 		assign_stmt->op = 0;
-			 		assign_stmt->lhs->value = assign_stmt->op1->value;
-			 		update_var_store(assign_stmt->lhs->name, assign_stmt->lhs->value);
+			 		//assign_stmt->lhs->value = assign_stmt->op1->value;
+			 		//update_var_store(assign_stmt->lhs->name, assign_stmt->lhs->value);
 			 		//debug_print_var_store();
 			 		// ////printf("ASSIGN STMT LHS NAME= %s", assign_stmt->lhs->name);
 			 		// ////printf("ASSIGN STMT LHS Value= %d", assign_stmt->lhs->value);
@@ -249,44 +248,45 @@ struct assignmentStatement* parse_assign_stmt(){
 			 			ttype = getToken();
 			 			if (ttype == SEMICOLON)
 			 			{
-			 				ungetToken();
-			 				switch (assign_stmt->op)
-			 				{
-			 					case PLUS:
-			 						sum = assign_stmt->op1->value + assign_stmt->op2->value;
-			 						assign_stmt->lhs->value = sum;
-			 						update_var_store(assign_stmt->lhs->name, assign_stmt->lhs->value);
-			 						break;
-			 					case MINUS:
+			 				 ungetToken();
+			 				// switch (assign_stmt->op)
+			 				// {
+			 				// 	case PLUS:
+			 				// 		sum = assign_stmt->op1->value + assign_stmt->op2->value;
+			 				// 		assign_stmt->lhs->value = sum;
+			 				// 		update_var_store(assign_stmt->lhs->name, assign_stmt->lhs->value);
+			 				// 		break;
+			 				// 	case MINUS:
 			 						
-			 						diff = assign_stmt->op1->value - assign_stmt->op2->value;
-			 						assign_stmt->lhs->value = diff;
-			 						update_var_store(assign_stmt->lhs->name, assign_stmt->lhs->value);
-			 						break;
-			 					case MULT:
+			 				// 		diff = assign_stmt->op1->value - assign_stmt->op2->value;
+			 				// 		assign_stmt->lhs->value = diff;
+			 				// 		update_var_store(assign_stmt->lhs->name, assign_stmt->lhs->value);
+			 				// 		break;
+			 				// 	case MULT:
 			 						
-			 						product = assign_stmt->op1->value * assign_stmt->op2->value;
-			 						assign_stmt->lhs->value = product;
-			 						update_var_store(assign_stmt->lhs->name, assign_stmt->lhs->value);
-			 						break;
-			 					case DIV:
+			 				// 		product = assign_stmt->op1->value * assign_stmt->op2->value;
+			 				// 		assign_stmt->lhs->value = product;
+			 				// 		update_var_store(assign_stmt->lhs->name, assign_stmt->lhs->value);
+			 				// 		break;
+			 				// 	case DIV:
 			 						
-			 						sum = assign_stmt->op1->value / assign_stmt->op2->value;
-			 						assign_stmt->lhs->value = quotient;
-			 						update_var_store(assign_stmt->lhs->name, assign_stmt->lhs->value);
-			 						break;
-			 					default:
-			 						////printf("ERROR! Unknown Operator in Assignment Statement\n");
-			 						break;
+			 				// 		sum = assign_stmt->op1->value / assign_stmt->op2->value;
+			 				// 		assign_stmt->lhs->value = quotient;
+			 				// 		update_var_store(assign_stmt->lhs->name, assign_stmt->lhs->value);
+			 				// 		break;
+			 				// 	default:
+			 				// 		////printf("ERROR! Unknown Operator in Assignment Statement\n");
+			 				// 		break;
 
-			 				}
+			 				// }
 			 				return assign_stmt;
 			 			}
 			 		}
 			 	}
 			 } 	
 		} 
-	} 
+	}
+	//debug_print_var_store(); 
 	return assign_stmt;
 }
 
